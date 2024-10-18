@@ -1,0 +1,22 @@
+name: add-subscription
+spec:
+  addressName: statistics.topic.async.conversions
+  subscription: conversions-subscription-microserviceA
+  producer: myproducer-app
+  consumer: microserviceA
+  producerGroupRole: statistics-write
+  consumerGroupRole: statistics-read
+  adminRole: statistics-admin
+
+
+
+#Check if statistics.# exist 
+#if not create namespace statistics.#
+#Create address settings and security settings statistics.topic.async.conversions
+
+#Create security settings statistics.topic.async.conversions::conversions-subscription-microserviceA
+
+#Create security settings
+#Create addresses 
+
+#export broker.xml

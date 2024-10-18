@@ -1,0 +1,31 @@
+name: add-queue
+spec:
+  addressName: statistics.queue.async.conversions
+  queueName: statistics.queue.async.conversions
+  routingType: anycast
+  producer: someapp
+  consumer: someapp
+  namespace: statistics.#
+  producerRole: statistics-write
+  consumerRole: statistics-read
+  adminRole: statistics-admin
+
+
+
+#Check if statistics.# exist 
+
+
+#if not create namespace statistics.#
+#if !findNamespaceAddressByName(addressName) then addNamespaceAddressByName(addressName)
+
+#Create address settings and security settings for namespace
+#addNamespaceSecuritySetting(statistics.#, String producerRole, String consumerRole, String adminRole) {
+
+#Remove security settings for statistics.queue.async.conversions (false if they dont exist)
+#deleteSecuritySetting(statistics.queue.async.conversions) {
+#Remove address for statistics.queue.async.conversions (false if they dont exist)
+
+#Create security settings
+#Create addresses 
+
+#export broker.xml

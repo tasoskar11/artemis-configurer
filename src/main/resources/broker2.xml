@@ -1,0 +1,321 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<configuration xmlns="urn:activemq" xmlns:ns2="urn:activemq:core" xmlns:ns3="urn:activemq:jms">
+    <ns2:core>
+        <ns2:name>17c5eed547cc</ns2:name>
+        <ns2:journal-datasync>true</ns2:journal-datasync>
+        <ns2:persistence-enabled>true</ns2:persistence-enabled>
+        <ns2:cluster-user>artemis_cluster_user</ns2:cluster-user>
+        <ns2:cluster-password>test_cluster_password</ns2:cluster-password>
+        <ns2:jmx-management-enabled>true</ns2:jmx-management-enabled>
+        <ns2:connectors>
+            <ns2:connector name="node1-connector">tcp://node1:51616?sslEnabled=false</ns2:connector>
+        </ns2:connectors>
+        <ns2:acceptors>
+            <ns2:acceptor name="artemis-ssl-internal">
+                tcp://0.0.0.0:51616?tcpSendBufferSize=33554432;tcpReceiveBufferSize=33554432;protocols=CORE,AMQP,OPENWIRE;useEpoll=true;amqpCredits=1000;amqpLowCredits=300;sslEnabled=false
+            </ns2:acceptor>
+        </ns2:acceptors>
+        <ns2:broadcast-groups>
+            <ns2:broadcast-group name="bg-group1">
+                <ns2:group-address>${udp-address:231.7.7.7}</ns2:group-address>
+                <ns2:group-port>9876</ns2:group-port>
+                <ns2:broadcast-period>500</ns2:broadcast-period>
+                <ns2:connector-ref>node1-connector</ns2:connector-ref>
+            </ns2:broadcast-group>
+        </ns2:broadcast-groups>
+        <ns2:discovery-groups>
+            <ns2:discovery-group name="dg-group1">
+                <ns2:group-address>${udp-address:231.7.7.7}</ns2:group-address>
+                <ns2:group-port>9876</ns2:group-port>
+                <ns2:refresh-timeout>10000</ns2:refresh-timeout>
+            </ns2:discovery-group>
+        </ns2:discovery-groups>
+        <ns2:ha-policy>
+            <ns2:live-only/>
+        </ns2:ha-policy>
+        <ns2:cluster-connections>
+            <ns2:cluster-connection name="local-cluster">
+                <ns2:connector-ref>node1-connector</ns2:connector-ref>
+                <ns2:discovery-group-ref discovery-group-name="dg-group1"/>
+            </ns2:cluster-connection>
+        </ns2:cluster-connections>
+        <ns2:paging-directory>/var/lib/artemis/data/node1/paging</ns2:paging-directory>
+        <ns2:bindings-directory>/var/lib/artemis/data/node1/bindings</ns2:bindings-directory>
+        <ns2:journal-directory>/var/lib/artemis/data/node1/journal</ns2:journal-directory>
+        <ns2:journal-type>ASYNCIO</ns2:journal-type>
+        <ns2:journal-buffer-timeout>32000</ns2:journal-buffer-timeout>
+        <ns2:journal-device-block-size>4096</ns2:journal-device-block-size>
+        <ns2:journal-file-size>10M</ns2:journal-file-size>
+        <ns2:journal-min-files>10</ns2:journal-min-files>
+        <ns2:journal-pool-files>20</ns2:journal-pool-files>
+        <ns2:journal-max-io>4096</ns2:journal-max-io>
+        <ns2:global-max-size>200000000</ns2:global-max-size>
+        <ns2:max-disk-usage>98</ns2:max-disk-usage>
+        <ns2:disk-scan-period>5000</ns2:disk-scan-period>
+        <ns2:large-messages-directory>/var/lib/artemis/data/node1/large-messages</ns2:large-messages-directory>
+        <ns2:critical-analyzer>true</ns2:critical-analyzer>
+        <ns2:critical-analyzer-timeout>120000</ns2:critical-analyzer-timeout>
+        <ns2:critical-analyzer-check-period>60000</ns2:critical-analyzer-check-period>
+        <ns2:critical-analyzer-policy>HALT</ns2:critical-analyzer-policy>
+        <ns2:security-settings>
+            <ns2:security-setting match="#">
+                <ns2:permission type="createNonDurableQueue" roles="amq"/>
+                <ns2:permission type="deleteNonDurableQueue" roles="amq"/>
+                <ns2:permission type="createDurableQueue" roles="amq"/>
+                <ns2:permission type="deleteDurableQueue" roles="amq"/>
+                <ns2:permission type="createAddress" roles="amq"/>
+                <ns2:permission type="deleteAddress" roles="amq"/>
+                <ns2:permission type="consume" roles="amq"/>
+                <ns2:permission type="browse" roles="amq"/>
+                <ns2:permission type="send" roles="amq"/>
+                <ns2:permission type="manage" roles="amq"/>
+            </ns2:security-setting>
+            <ns2:security-setting match="customer.#">
+                <ns2:permission type="createNonDurableQueue" roles="customer-admin,customer-write,customer-read"/>
+                <ns2:permission type="deleteNonDurableQueue" roles="customer-admin"/>
+                <ns2:permission type="createDurableQueue" roles="customer-admin,customer-write,customer-read"/>
+                <ns2:permission type="deleteDurableQueue" roles="customer-admin"/>
+                <ns2:permission type="createAddress" roles="customer-admin,customer-write,customer-read"/>
+                <ns2:permission type="deleteAddress" roles="customer-admin"/>
+                <ns2:permission type="consume" roles="customer-admin,customer-read"/>
+                <ns2:permission type="browse" roles="customer-admin,customer-read"/>
+                <ns2:permission type="send" roles="customer-admin,customer-write"/>
+                <ns2:permission type="manage" roles="customer-admin"/>
+            </ns2:security-setting>
+            <ns2:security-setting match="customer.queue.contact.details.#">
+                <ns2:permission type="send" roles="customer-contact-app"/>
+                <ns2:permission type="consume" roles="statistics-collector-app"/>
+                <ns2:permission type="browse" roles="statistics-collector-app"/>
+            </ns2:security-setting>
+            <ns2:security-setting match="customer.queue.personal.settings.#">
+                <ns2:permission type="send" roles="frontend-app"/>
+                <ns2:permission type="consume" roles="customer-contact-app"/>
+                <ns2:permission type="browse" roles="customer-contact-app"/>
+            </ns2:security-setting>
+            <ns2:security-setting match="customer.queue.contract.export.#">
+                <ns2:permission type="send" roles="customer-app"/>
+                <ns2:permission type="consume" roles="statistics-aggregator-app"/>
+                <ns2:permission type="browse" roles="statistics-aggregator-app"/>
+            </ns2:security-setting>
+            <ns2:security-setting match="sales.#">
+                <ns2:permission type="createNonDurableQueue" roles="sales-admin,sales-write,sales-read"/>
+                <ns2:permission type="deleteNonDurableQueue" roles="sales-admin"/>
+                <ns2:permission type="createDurableQueue" roles="sales-admin,sales-write,sales-read"/>
+                <ns2:permission type="deleteDurableQueue" roles="sales-admin"/>
+                <ns2:permission type="createAddress" roles="sales-admin,sales-write,sales-read"/>
+                <ns2:permission type="deleteAddress" roles="sales-admin"/>
+                <ns2:permission type="consume" roles="sales-admin,sales-read"/>
+                <ns2:permission type="browse" roles="sales-admin,sales-read"/>
+                <ns2:permission type="send" roles="sales-admin,sales-write"/>
+                <ns2:permission type="manage" roles="sales-admin"/>
+            </ns2:security-setting>
+            <ns2:security-setting match="sales.queue.prospects.export.request.#">
+                <ns2:permission type="send" roles="sales-info-app"/>
+                <ns2:permission type="consume" roles="sales-prospects-app"/>
+                <ns2:permission type="browse" roles="sales-prospects-app"/>
+            </ns2:security-setting>
+            <ns2:security-setting match="sales.queue.prospects.export.response.#">
+                <ns2:permission type="send" roles="sales-prospects-app"/>
+                <ns2:permission type="consume" roles="sales-info-app"/>
+                <ns2:permission type="browse" roles="sales-info-app"/>
+            </ns2:security-setting>
+            <ns2:security-setting match="sales.queue.invoice.details.#">
+                <ns2:permission type="send" roles="sales-info-app"/>
+                <ns2:permission type="consume" roles="frontend-app"/>
+                <ns2:permission type="browse" roles="frontend-app"/>
+            </ns2:security-setting>
+            <ns2:security-setting match="sales.topic.yearly.balance.status.#">
+                <ns2:permission type="send" roles="sales-admin,sales-info-app"/>
+                <ns2:permission type="consume" roles="sales-admin"/>
+                <ns2:permission type="browse" roles="sales-admin"/>
+                <ns2:permission type="createNonDurableQueue" roles="sales-admin,sales-info-app"/>
+                <ns2:permission type="deleteNonDurableQueue" roles="sales-admin,sales-info-app"/>
+                <ns2:permission type="createDurableQueue" roles="sales-admin,sales-info-app"/>
+                <ns2:permission type="deleteDurableQueue" roles="sales-admin,sales-info-app"/>
+                <ns2:permission type="createAddress" roles="sales-admin,sales-info-app"/>
+                <ns2:permission type="deleteAddress" roles="sales-admin,sales-info-app"/>
+            </ns2:security-setting>
+            <ns2:security-setting match="sales.topic.yearly.balance.status::status-balance-statistics-collector-app">
+                <ns2:permission type="consume" roles="sales-admin,statistics-collector-app"/>
+                <ns2:permission type="browse" roles="sales-admin,statistics-collector-app"/>
+            </ns2:security-setting>
+            <ns2:security-setting match="sales.topic.yearly.balance.status::status-balance-incident-manager-app">
+                <ns2:permission type="consume" roles="sales-admin,incident-manager-app"/>
+                <ns2:permission type="browse" roles="sales-admin,incident-manager-app"/>
+            </ns2:security-setting>
+            <ns2:security-setting match="statistics.#">
+                <ns2:permission type="createNonDurableQueue" roles="statistics-admin,statistics-write,statistics-read"/>
+                <ns2:permission type="deleteNonDurableQueue" roles="statistics-admin"/>
+                <ns2:permission type="createDurableQueue" roles="statistics-admin,statistics-write,statistics-read"/>
+                <ns2:permission type="deleteDurableQueue" roles="statistics-admin"/>
+                <ns2:permission type="createAddress" roles="statistics-admin,statistics-write,statistics-read"/>
+                <ns2:permission type="deleteAddress" roles="statistics-admin"/>
+                <ns2:permission type="consume" roles="statistics-admin,statistics-read"/>
+                <ns2:permission type="browse" roles="statistics-admin,statistics-read"/>
+                <ns2:permission type="send" roles="statistics-admin,statistics-write"/>
+                <ns2:permission type="manage" roles="statistics-admin"/>
+            </ns2:security-setting>
+            <ns2:security-setting match="statistics.queue.async.conversions.#">
+                <ns2:permission type="send" roles="frontend-app"/>
+                <ns2:permission type="consume" roles="statistics-collector-app"/>
+                <ns2:permission type="browse" roles="statistics-collector-app"/>
+            </ns2:security-setting>
+            <ns2:security-setting match="statistics.queue.async.aggregated.result.#">
+                <ns2:permission type="send" roles="statistics-exporter"/>
+                <ns2:permission type="consume" roles="statistics-aggregator"/>
+                <ns2:permission type="browse" roles="statistics-aggregator"/>
+            </ns2:security-setting>
+            <ns2:security-setting match="customer.queue.contract.export.new5.#">
+                <ns2:permission type="consume" roles="statistics-aggregator"/>
+                <ns2:permission type="browse" roles="statistics-aggregator"/>
+                <ns2:permission type="send" roles="statistics-aggregator"/>
+            </ns2:security-setting>
+        </ns2:security-settings>
+        <ns2:address-settings>
+            <ns2:address-setting match="activemq.management#">
+                <ns2:dead-letter-address>DLQ</ns2:dead-letter-address>
+                <ns2:expiry-address>ExpiryQueue</ns2:expiry-address>
+                <ns2:redelivery-delay>0</ns2:redelivery-delay>
+                <ns2:max-size-bytes>-1</ns2:max-size-bytes>
+                <ns2:address-full-policy>PAGE</ns2:address-full-policy>
+                <ns2:message-counter-history-day-limit>10</ns2:message-counter-history-day-limit>
+                <ns2:auto-create-jms-queues>true</ns2:auto-create-jms-queues>
+                <ns2:auto-create-jms-topics>true</ns2:auto-create-jms-topics>
+                <ns2:auto-create-queues>true</ns2:auto-create-queues>
+                <ns2:auto-create-addresses>true</ns2:auto-create-addresses>
+            </ns2:address-setting>
+            <ns2:address-setting match="customer.#">
+                <ns2:dead-letter-address>customer.DLQ</ns2:dead-letter-address>
+                <ns2:auto-create-dead-letter-resources>true</ns2:auto-create-dead-letter-resources>
+                <ns2:dead-letter-queue-prefix>DLQ.</ns2:dead-letter-queue-prefix>
+                <ns2:dead-letter-queue-suffix>.DLQ</ns2:dead-letter-queue-suffix>
+                <ns2:expiry-address>customer.EXP</ns2:expiry-address>
+                <ns2:auto-create-expiry-resources>true</ns2:auto-create-expiry-resources>
+                <ns2:expiry-queue-prefix>EXP.</ns2:expiry-queue-prefix>
+                <ns2:expiry-queue-suffix>.EXP</ns2:expiry-queue-suffix>
+                <ns2:expiry-delay>604800000</ns2:expiry-delay>
+                <ns2:redelivery-delay>100</ns2:redelivery-delay>
+                <ns2:max-size-bytes>-1</ns2:max-size-bytes>
+                <ns2:address-full-policy>PAGE</ns2:address-full-policy>
+                <ns2:message-counter-history-day-limit>10</ns2:message-counter-history-day-limit>
+                <ns2:redistribution-delay>500</ns2:redistribution-delay>
+                <ns2:auto-create-jms-queues>true</ns2:auto-create-jms-queues>
+                <ns2:auto-create-jms-topics>true</ns2:auto-create-jms-topics>
+                <ns2:auto-create-queues>true</ns2:auto-create-queues>
+                <ns2:auto-create-addresses>true</ns2:auto-create-addresses>
+            </ns2:address-setting>
+            <ns2:address-setting match="sales.#">
+                <ns2:dead-letter-address>sales.DLQ</ns2:dead-letter-address>
+                <ns2:auto-create-dead-letter-resources>true</ns2:auto-create-dead-letter-resources>
+                <ns2:dead-letter-queue-prefix>DLQ.</ns2:dead-letter-queue-prefix>
+                <ns2:dead-letter-queue-suffix>.DLQ</ns2:dead-letter-queue-suffix>
+                <ns2:expiry-address>sales.EXP</ns2:expiry-address>
+                <ns2:auto-create-expiry-resources>true</ns2:auto-create-expiry-resources>
+                <ns2:expiry-queue-prefix>EXP.</ns2:expiry-queue-prefix>
+                <ns2:expiry-queue-suffix>.EXP</ns2:expiry-queue-suffix>
+                <ns2:expiry-delay>604800000</ns2:expiry-delay>
+                <ns2:redelivery-delay>100</ns2:redelivery-delay>
+                <ns2:max-size-bytes>-1</ns2:max-size-bytes>
+                <ns2:address-full-policy>PAGE</ns2:address-full-policy>
+                <ns2:message-counter-history-day-limit>10</ns2:message-counter-history-day-limit>
+                <ns2:redistribution-delay>500</ns2:redistribution-delay>
+                <ns2:auto-create-jms-queues>true</ns2:auto-create-jms-queues>
+                <ns2:auto-create-jms-topics>true</ns2:auto-create-jms-topics>
+                <ns2:auto-create-queues>true</ns2:auto-create-queues>
+                <ns2:auto-create-addresses>true</ns2:auto-create-addresses>
+            </ns2:address-setting>
+            <ns2:address-setting match="statistics.#">
+                <ns2:dead-letter-address>statistics.DLQ</ns2:dead-letter-address>
+                <ns2:auto-create-dead-letter-resources>true</ns2:auto-create-dead-letter-resources>
+                <ns2:dead-letter-queue-prefix>DLQ.</ns2:dead-letter-queue-prefix>
+                <ns2:dead-letter-queue-suffix>.DLQ</ns2:dead-letter-queue-suffix>
+                <ns2:expiry-address>statistics.EXP</ns2:expiry-address>
+                <ns2:auto-create-expiry-resources>true</ns2:auto-create-expiry-resources>
+                <ns2:expiry-queue-prefix>EXP.</ns2:expiry-queue-prefix>
+                <ns2:expiry-queue-suffix>.EXP</ns2:expiry-queue-suffix>
+                <ns2:expiry-delay>604800000</ns2:expiry-delay>
+                <ns2:redelivery-delay>100</ns2:redelivery-delay>
+                <ns2:max-size-bytes>-1</ns2:max-size-bytes>
+                <ns2:address-full-policy>PAGE</ns2:address-full-policy>
+                <ns2:message-counter-history-day-limit>10</ns2:message-counter-history-day-limit>
+                <ns2:redistribution-delay>500</ns2:redistribution-delay>
+                <ns2:auto-create-jms-queues>true</ns2:auto-create-jms-queues>
+                <ns2:auto-create-jms-topics>true</ns2:auto-create-jms-topics>
+                <ns2:auto-create-queues>true</ns2:auto-create-queues>
+                <ns2:auto-create-addresses>true</ns2:auto-create-addresses>
+            </ns2:address-setting>
+            <ns2:address-setting match="#">
+                <ns2:dead-letter-address>DLQ</ns2:dead-letter-address>
+                <ns2:expiry-address>ExpiryQueue</ns2:expiry-address>
+                <ns2:expiry-delay>604800000</ns2:expiry-delay>
+                <ns2:redelivery-delay>0</ns2:redelivery-delay>
+                <ns2:max-size-bytes>-1</ns2:max-size-bytes>
+                <ns2:address-full-policy>PAGE</ns2:address-full-policy>
+                <ns2:message-counter-history-day-limit>10</ns2:message-counter-history-day-limit>
+                <ns2:redistribution-delay>5000</ns2:redistribution-delay>
+                <ns2:auto-create-jms-queues>true</ns2:auto-create-jms-queues>
+                <ns2:auto-create-jms-topics>true</ns2:auto-create-jms-topics>
+                <ns2:auto-create-queues>true</ns2:auto-create-queues>
+                <ns2:auto-create-addresses>true</ns2:auto-create-addresses>
+            </ns2:address-setting>
+        </ns2:address-settings>
+        <ns2:addresses>
+            <ns2:address name="DLQ">
+                <ns2:anycast>
+                    <ns2:queue name="DLQ"/>
+                </ns2:anycast>
+            </ns2:address>
+            <ns2:address name="ExpiryQueue">
+                <ns2:anycast>
+                    <ns2:queue name="ExpiryQueue"/>
+                </ns2:anycast>
+            </ns2:address>
+            <ns2:address name="statistics.queue.async.conversions">
+                <ns2:anycast>
+                    <ns2:queue name="statistics.queue.async.conversions"/>
+                </ns2:anycast>
+            </ns2:address>
+            <ns2:address name="statistics.queue.async.aggregated.result">
+                <ns2:anycast>
+                    <ns2:queue name="statistics.queue.async.aggregated.result"/>
+                </ns2:anycast>
+            </ns2:address>
+            <ns2:address name="customer.queue.contract.export">
+                <ns2:anycast>
+                    <ns2:queue name="customer.queue.contract.export"/>
+                </ns2:anycast>
+            </ns2:address>
+            <ns2:address name="customer.queue.personal.settings">
+                <ns2:anycast>
+                    <ns2:queue name="customer.queue.personal.settings"/>
+                </ns2:anycast>
+            </ns2:address>
+            <ns2:address name="customer.queue.contact.details">
+                <ns2:anycast>
+                    <ns2:queue name="customer.queue.contact.details"/>
+                </ns2:anycast>
+            </ns2:address>
+            <ns2:address name="sales.topic.yearly.balance.status">
+                <ns2:multicast>
+                    <ns2:queue name="status-balance-statistics-collector-app"/>
+                    <ns2:queue name="status-balance-incident-manager-app"/>
+                </ns2:multicast>
+            </ns2:address>
+            <ns2:address name="sales.queue.prospects.export.request">
+                <ns2:anycast>
+                    <ns2:queue name="sales.queue.prospects.export.request"/>
+                </ns2:anycast>
+            </ns2:address>
+            <ns2:address name="sales.queue.prospects.export.response">
+                <ns2:anycast>
+                    <ns2:queue name="sales.queue.prospects.export.response"/>
+                </ns2:anycast>
+            </ns2:address>
+            <ns2:address name="sales.queue.invoice.details">
+                <ns2:anycast>
+                    <ns2:queue name="sales.queue.invoice.details"/>
+                </ns2:anycast>
+            </ns2:address>
+        </ns2:addresses>
+    </ns2:core>
+</configuration>
